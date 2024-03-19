@@ -47,12 +47,10 @@ public class AdamsPlayer extends Player {
 
     @Override
     protected boolean shouldCheck() {
-        // check if only high card and no bets in the first two rounds
-        if(getGameState().getNumRoundStage() == 0 || getGameState().getNumRoundStage() == 1){
-            boolean hasBadHand = evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue();
-            boolean noBet = !getGameState().isActiveBet();
-            return hasBadHand || noBet;
-        }
+        // check if there is no active bet
+            if(!getGameState().isActiveBet()){
+                return true;
+            }
         return false;
     }
 
@@ -92,10 +90,12 @@ public class AdamsPlayer extends Player {
 
     @Override
     protected boolean shouldAllIn() {
-        //10% chance of bluff
-        if(evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue()){
-            double bluff = Math.random();
-            return bluff > random; // 0.9
+        //10% chance of bluff when there is an active bet
+        if(getGameState().isActiveBet()){
+            if(evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue()){
+                double bluff = Math.random();
+                return bluff > random; // 0.9
+            }
         }
         // royal flush = all in
         boolean hasPerfectHand = evaluatePlayerHand().getValue() >= HandRanks.ROYAL_FLUSH.getValue();
