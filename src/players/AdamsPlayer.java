@@ -69,6 +69,7 @@ public class AdamsPlayer extends Player {
     @Override
     protected boolean shouldRaise() {
         if(getGameState().isActiveBet()){
+
             if(getGameState().getNumRoundStage() == 0){ // raise if pair in hand on first round
                 boolean hasFineHand = evaluatePlayerHand().getValue() == HandRanks.PAIR.getValue();
                 return hasFineHand;
