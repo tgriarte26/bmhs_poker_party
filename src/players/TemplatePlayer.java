@@ -30,12 +30,12 @@ public class TemplatePlayer extends Player {
 
     @Override
     public boolean shouldFold() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean shouldCheck() {
-        return true;
+        return false;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TemplatePlayer extends Player {
 
     @Override
     public boolean shouldRaise() {
-        return false;
+        return true;
     }
 
     @Override

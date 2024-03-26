@@ -9,7 +9,7 @@ public class GameState {
     private List<Map<String, Integer>> listPlayersNameBankMap; // A list of maps, each representing a player's name and bank balance.
 
     // Various game state variables
-    private int deckNumRemainingCards, numPlayersRemainingGame, numPlayersRemainingRound, tableAnteCountdown, tableAnteSmall, tableAnteBig, tablePot, tableBet, tableMinBet, activeBetNumberOfPlayersLeft, numTotalGames, numRoundStage, dealerIndex;
+    private int deckNumRemainingCards, numDecksUsed, numPlayersRemainingGame, numPlayersRemainingRound, tableAnteCountdown, tableAnteSmall, tableAnteBig, tablePot, tableBet, tableMinBet, activeBetNumberOfPlayersLeft, numTotalGames, numRoundStage, dealerIndex;
 
     private boolean activeBet; // Indicates if there is an active bet in the game.
 
@@ -38,11 +38,12 @@ public class GameState {
      * @param big The big blind player.
      * @param dealerIndex The index of the dealer player.
      */
-    public GameState(List<Card> tableCards, List<Map<String, Integer>> listPlayersNameBankMap, int deckNumRemainingCards, int numPlayersRemainingGame, int numPlayersRemainingRound, int tableAnteCountdown, int tableAnteSmall, int tableAnteBig, int tablePot, int tableBet, int tableMinBet, boolean activeBet, int activeBetNumberOfPlayersLeft, int numTotalGames, int numRoundStage, Player dealer, Player small, Player big, int dealerIndex) {
+    public GameState(List<Card> tableCards, List<Map<String, Integer>> listPlayersNameBankMap, int deckNumRemainingCards, int numDecksUsed, int numPlayersRemainingGame, int numPlayersRemainingRound, int tableAnteCountdown, int tableAnteSmall, int tableAnteBig, int tablePot, int tableBet, int tableMinBet, boolean activeBet, int activeBetNumberOfPlayersLeft, int numTotalGames, int numRoundStage, Player dealer, Player small, Player big, int dealerIndex) {
         this.tableCards = tableCards;
         this.listPlayersNameBankMap = listPlayersNameBankMap;
 
         this.deckNumRemainingCards = deckNumRemainingCards;
+        this.numDecksUsed = numDecksUsed;
         this.numPlayersRemainingGame = numPlayersRemainingGame;
         this.numPlayersRemainingRound = numPlayersRemainingRound;
         this.tableAnteCountdown = tableAnteCountdown;
@@ -85,6 +86,10 @@ public class GameState {
      */
     public int getDeckNumRemainingCards() {
         return deckNumRemainingCards;
+    }
+
+    public int getNumDecksUsed() {
+        return numDecksUsed;
     }
 
     /**

@@ -5,7 +5,7 @@ import java.util.Collections;
 
 public class Deck {
     private ArrayList<Card> cards; // The list of cards in the deck.
-
+    private int numDecksUsed;
     /**
      * Constructor for a Deck object.
      * Initializes the deck with a standard 52-card deck, with 4 suits and 13 values each.
@@ -20,6 +20,7 @@ public class Deck {
                 cards.add(new Card(suit, value)); // Add a new card to the deck for each suit and value.
             }
         }
+        numDecksUsed = 1;
     }
 
     /**
@@ -28,6 +29,10 @@ public class Deck {
      */
     public void shuffle() {
         Collections.shuffle(cards); // Shuffle the cards in the deck.
+    }
+
+    public int getNumDecksUsed() {
+        return numDecksUsed;
     }
 
     /**
@@ -42,6 +47,7 @@ public class Deck {
                     cards.add(new Card(suit, value)); // Add a new card to the deck for each suit and value.
                 }
             }
+            numDecksUsed++;
             shuffle(); // Shuffle the new deck.
         }
         return cards.remove(cards.size() - 1); // Remove and return the top card from the deck.

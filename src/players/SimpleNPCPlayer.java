@@ -46,7 +46,7 @@ public class SimpleNPCPlayer extends Player {
     protected boolean shouldRaise() {
         // Expand raise conditions to include scenarios where previously a call might have been made
         // Example: raise if the hand is decent (lower than before) or if the bet is a small percentage of the bank
-        boolean hasDecentHand = evaluatePlayerHand().getValue() >= HandRanks.HIGH_CARD.getValue();
+        boolean hasDecentHand = evaluatePlayerHand().getValue() > HandRanks.HIGH_CARD.getValue();
         boolean betIsSmallPercentageOfBank = getGameState().getTableBet() < getBank() * 0.05;
         return hasDecentHand || betIsSmallPercentageOfBank;
     }

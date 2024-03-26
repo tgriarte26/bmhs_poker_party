@@ -40,4 +40,16 @@ public class Card {
         String[] values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         return "["+ values[this.value-2] + suits[this.suit] + "]";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Card otherCard = (Card) obj;
+        return this.suit == otherCard.getSuit() && this.value == otherCard.getValue();
+    }
 }

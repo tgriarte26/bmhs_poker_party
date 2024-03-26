@@ -15,7 +15,7 @@ public abstract class Player {
     private int bank, bet;
 
     // Flags to indicate the player's status in the game.
-    private boolean isDealer, isSmall, isBig, isFold, isAllIn, isBetActive;
+    private boolean isDealer, isSmall, isBig, isFold, isAllIn, isBetActive, isBet, isActionRemaining;
     // Flags to indicate whether the player can call or check in the current turn.
     private boolean canCall, canCheck; 
 
@@ -48,6 +48,8 @@ public abstract class Player {
         this.isFold = false;
         this.isAllIn = false;
         this.isBetActive = false;
+        this.isActionRemaining = false;
+        this.isBet = false;
 
         // By default, a player can call or check.
         this.canCall = true; 
@@ -193,6 +195,8 @@ public abstract class Player {
      * @return The last action taken by the player.
      */
     PlayerActions getPlayerAction(GameState state) {
+        playerAction = null;
+        //printExampleStateInformation();
         updateGameState(state); // Update the player's game state to the current state.
         takePlayerTurn(); // Execute the player's turn based on the updated state.
         return playerAction; // Return the action taken by the player.
@@ -212,6 +216,7 @@ public abstract class Player {
         isBig = false;
         isFold = false;
         isAllIn = false;
+        //isBet = false;
         isBetActive = false;
 
         // By default, a player can call or check in the new hand.
@@ -243,6 +248,14 @@ public abstract class Player {
      */
     public int getBet() {
         return bet;
+    }
+
+    public boolean isBet() {
+        return isBet;
+    }
+
+    void setIsBet(boolean value) {
+        isBet = value;
     }
 
     /**
@@ -342,12 +355,24 @@ public abstract class Player {
         return isAllIn;
     }
 
+    void setIsAllIn(boolean value) {
+        isAllIn = value;
+    }
+
     /**
      * Checks if there is an active bet for the player.
      * @return True if there is an active bet, false otherwise.
      */
     protected boolean isBetActive() {
         return isBetActive;
+    }
+
+    public boolean isActionRemaining() {
+        return isActionRemaining;
+    }
+
+    void setActionRemaining (boolean value) {
+        isActionRemaining = value;
     }
 
     /**
@@ -420,7 +445,6 @@ public abstract class Player {
      * @return True if the player should go all-in, false otherwise.
      */
     protected abstract boolean shouldAllIn();
-
      
     /**
      * Prints example game state information to demonstrate how to access and use data from the GameState object.
