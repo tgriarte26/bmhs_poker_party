@@ -81,10 +81,11 @@ public class GameEngine {
 
         // Add NPC players to the game. These methods should be defined to add specific types of NPC players.
 
-        listPlayersRemainingGame.add(new TrevPlayer("BCA"));
-        //listPlayersRemainingGame.add(new ManualPlayer("Manual"));
-        addConservativeNPCs(2);
-        addSimpleNPCs(2);
+        listPlayersRemainingGame.add(new TrevPlayer("T"));
+        listPlayersRemainingGame.add(new ManualPlayer("Manual"));
+        listPlayersRemainingGame.add(new ManualPlayer("Emanual"));
+        addConservativeNPCs(0);
+        addSimpleNPCs(0);
         addRandomNPCs(0);
         //addTempPlayers(2);
         Collections.shuffle(listPlayersRemainingGame);

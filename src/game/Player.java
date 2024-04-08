@@ -196,7 +196,7 @@ public abstract class Player {
      */
     PlayerActions getPlayerAction(GameState state) {
         playerAction = null;
-        printExampleStateInformation();
+        //printExampleStateInformation();
         updateGameState(state); // Update the player's game state to the current state.
         takePlayerTurn(); // Execute the player's turn based on the updated state.
         return playerAction; // Return the action taken by the player.
