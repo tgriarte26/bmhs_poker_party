@@ -2,13 +2,15 @@ package players;
 
 import game.HandRanks;
 import game.Player;
+import java.util.Random;
 
 import java.util.Scanner;
 
 public class TrevPlayer extends Player {
     Scanner kb;
     double random = 0.9;
-
+    double maxRaiseMultiplier = 20.0;
+    Random factor = new Random();
     public TrevPlayer(String name) {
         super(name);
         kb = new Scanner(System.in);
@@ -20,16 +22,20 @@ public class TrevPlayer extends Player {
             fold();
         } else if (shouldRaise()) {
             if (getGameState().getNumRoundStage() == 0){
-                raise(getGameState().getTableMinBet());
+                double randomFactor = 1.0 + factor.nextDouble() * (maxRaiseMultiplier - 16.0); // Random factor between 1.0 and maxRaiseMultiplier
+                raise((int) (getGameState().getTableMinBet() * randomFactor));
             }
             if (getGameState().getNumRoundStage() == 1){
-                raise(getGameState().getTableMinBet() * 2);
+                double randomFactor = 1.0 + factor.nextDouble() * (maxRaiseMultiplier - 12.0); // Random factor between 1.0 and maxRaiseMultiplier
+                raise((int) (getGameState().getTableMinBet() * randomFactor));
             }
             if (getGameState().getNumRoundStage() == 2){
-                raise(getGameState().getTableMinBet() * 4);
+                double randomFactor = 1.0 + factor.nextDouble() * (maxRaiseMultiplier - 8.0); // Random factor between 1.0 and maxRaiseMultiplier
+                raise((int) (getGameState().getTableMinBet() * randomFactor));
             }
             if (getGameState().getNumRoundStage() == 3){
-                raise(getGameState().getTableMinBet() * 8);
+                double randomFactor = 1.0 + factor.nextDouble() * (maxRaiseMultiplier - 4.0); // Random factor between 1.0 and maxRaiseMultiplier
+                raise((int) (getGameState().getTableMinBet() * randomFactor));
             }
         } else if (shouldCall()) {
             call();
@@ -49,8 +55,8 @@ public class TrevPlayer extends Player {
                 boolean worstHand = evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue();
                 return worstHand;
             }
-            // fold if opponent bet is greater than 65% of my bank
-            boolean betIsLarge = getGameState().getTableBet() > getBank() * 0.65;
+            // fold if opponent bet is greater than 40% of my bank
+            boolean betIsLarge = getGameState().getTableBet() > getBank() * 0.40;
             return betIsLarge;
         }
         return false;
@@ -68,9 +74,13 @@ public class TrevPlayer extends Player {
     @Override
     protected boolean shouldCall() {
         if(getGameState().isActiveBet()){
-            // call if bet is less than 20% of my bank
-            boolean betIsReasonable = getGameState().getTableBet() < getBank() * 0.2;
-            return betIsReasonable;
+            if(evaluatePlayerHand().getValue() != HandRanks.HIGH_CARD.getValue()) { // call if there is a bet and no high card
+                // call if bet is less than or equal to 40% of my bank
+                boolean betIsReasonable = getGameState().getTableBet() <= getBank() * 0.40;
+                return betIsReasonable;
+            } else if(evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue()) {
+                    fold();
+            }
         }
         return false;
     }
