@@ -76,7 +76,7 @@ public class TrevPlayer extends Player {
     protected boolean shouldCall() {
         if (getGameState().isActiveBet()) {
             if (evaluatePlayerHand().getValue() != HandRanks.HIGH_CARD.getValue()) { // call if there is a bet and no high card
-                // call if bet is less than or equal to 40% of my bank
+                // call if bet is less than or equal to 50% of my bank
                 boolean betIsReasonable = getGameState().getTableBet() <= getBank() * 0.50;
                 return betIsReasonable;
             } else if (evaluatePlayerHand().getValue() == HandRanks.HIGH_CARD.getValue()) {
@@ -86,8 +86,12 @@ public class TrevPlayer extends Player {
                 // if high card in first or second round, raise by table min bet
                 } else if(getGameState().getNumRoundStage() == 0 || getGameState().getNumRoundStage() == 1){
                     raise(getGameState().getTableMinBet());
+                // if high card in third or last round, and bet is less than or equal to 30% of my bank, raise by table min bet
+                } else if(getGameState().getNumRoundStage() == 2 || getGameState().getNumRoundStage() == 3){
+                    if(getGameState().getTableBet() <= getBank() * 0.30){
+                        raise(getGameState().getTableMinBet());
+                    }
                 }
-
             }
         }
         return false;
@@ -101,31 +105,26 @@ public class TrevPlayer extends Player {
             boolean hasTwoPairHand = evaluatePlayerHand().getValue() == HandRanks.TWO_PAIR.getValue();
             return hasPairHand || hasTwoPairHand;
         }
-        // raise if four of a kind or straight flush in hand on last round
-        if (getGameState().getNumRoundStage() == 3) {
-            boolean handValue = evaluatePlayerHand().getValue() >= HandRanks.FOUR_OF_A_KIND.getValue() && evaluatePlayerHand().getValue() <= HandRanks.STRAIGHT_FLUSH.getValue();
-            return handValue;
-        }
-        // for three or more players remaining in round
+        // for three or more players remaining in round (CONSERVATIVE)
         if (getGameState().getNumPlayersRemainingRound() >= 3) {
-            // raise if straight or flush in hand on second round
-            if (getGameState().getNumRoundStage() == 1) {
-                boolean hasStraightHand = evaluatePlayerHand().getValue() >= HandRanks.STRAIGHT.getValue();
-                boolean hasFlushHand = evaluatePlayerHand().getValue() >= HandRanks.FLUSH.getValue();
-                return hasStraightHand || hasFlushHand;
+            // raise if between three of a kind and flush in hand in third round
+            if(getGameState().getNumRoundStage() == 2) {
+                boolean hasThreeKindHand = evaluatePlayerHand().getValue() >= HandRanks.THREE_OF_A_KIND.getValue();
+                boolean hasStraightHand = evaluatePlayerHand().getValue() <= HandRanks.FLUSH.getValue();
+                return hasThreeKindHand && hasStraightHand;
             }
-            // raise if full house in hand on third round
-            if (getGameState().getNumRoundStage() == 2) {
+            // raise if between full house and straight flush in hand in last round
+            if(getGameState().getNumRoundStage() == 3) {
                 boolean hasFullHouse = evaluatePlayerHand().getValue() >= HandRanks.FULL_HOUSE.getValue();
-                return hasFullHouse;
+                boolean hasStraightFlush = evaluatePlayerHand().getValue() <= HandRanks.STRAIGHT_FLUSH.getValue();
+                return hasFullHouse && hasStraightFlush;
             }
-        } else if (getGameState().getNumPlayersRemainingRound() == 2) { // for two players remaining in round
-            // raise if straight, flush, or full house in hand on second and third round
-            if (getGameState().getNumRoundStage() == 1 || getGameState().getNumRoundStage() == 2) {
-                boolean hasStraightHand = evaluatePlayerHand().getValue() >= HandRanks.STRAIGHT.getValue();
-                boolean hasFlushHand = evaluatePlayerHand().getValue() >= HandRanks.FLUSH.getValue();
-                boolean hasFullHouse = evaluatePlayerHand().getValue() >= HandRanks.FULL_HOUSE.getValue();
-                return hasStraightHand || hasFlushHand || hasFullHouse;
+        } else if (getGameState().getNumPlayersRemainingRound() == 2) { // for two players remaining in round (AGGRESSIVE)
+            // raise if between three of a kind and straight flush in hand from second to last round
+            if (getGameState().getNumRoundStage() == 1  || getGameState().getNumRoundStage() == 2 || getGameState().getNumRoundStage() == 3) {
+                boolean hasThreeKindHand = evaluatePlayerHand().getValue() >= HandRanks.THREE_OF_A_KIND.getValue();
+                boolean hasStraightFlushHand = evaluatePlayerHand().getValue() <= HandRanks.STRAIGHT_FLUSH.getValue();
+                return hasThreeKindHand && hasStraightFlushHand;
             }
         }
         return false;
@@ -140,7 +139,6 @@ public class TrevPlayer extends Player {
                 return bluff > random; // 0.9
             }
         }
-
         // royal flush = all in
         if(evaluatePlayerHand().getValue() == HandRanks.ROYAL_FLUSH.getValue()){
             return true;
