@@ -82,8 +82,9 @@ public class GameEngine {
         // Add NPC players to the game. These methods should be defined to add specific types of NPC players.
 
         listPlayersRemainingGame.add(new TrevPlayer("T"));
-        listPlayersRemainingGame.add(new ManualPlayer("Manual"));
-        listPlayersRemainingGame.add(new ManualPlayer("Emanual"));
+        //listPlayersRemainingGame.add(new ManualPlayer("Manual"));
+        //listPlayersRemainingGame.add(new ManualPlayer("Emanual"));
+        addAidanPlayer(1);
         addConservativeNPCs(0);
         addSimpleNPCs(0);
         addRandomNPCs(0);
@@ -704,6 +705,16 @@ public class GameEngine {
             listPlayersRemainingGame.add(new ConservativeNPCPlayer(tempName));
         }
     }
+
+    private void addAidanPlayer(int numPlayers) {
+        for(int i = 0; i < numPlayers; i++) {
+            // Generate a unique name for each random NPC player.
+            String tempName = "Aidan" + i;
+            // Add the random NPC player to the list of players still in the game.
+            listPlayersRemainingGame.add(new AidanPlayer(tempName));
+        }
+    }
+
 
     // Pauses the game for a specified number of milliseconds.
     private void sleep(int ms) {
